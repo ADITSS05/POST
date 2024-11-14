@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Prediction</title>
+</head>
+<body>
+    <h1>Predict Energy Consumption</h1>
+    <form id="predictionForm">
+        <label for="date">Date (DD.MM.YYYY):</label>
+        <input type="text" id="date" name="date"><br>
+        <label for="room_area">Room Area:</label>
+        <input type="text" id="room_area" name="room_area"><br>
+        <label for="temperature">Temperature:</label>
+        <input type="number" id="temperature" name="temperature" min="20" max="30"><br>
+        <button type="button" onclick="predict()">Submit</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        function predict() {
+            const date = document.getElementById('date').value;
+            const room_area = document.getElementById('room_area').value;
+            const temperature = document.getElementById('temperature').value;
+            
+            const data = {
+                date: date,
+                room_area: room_area,
+                temperature: temperature
+            };
+
+            fetch('https://your-ngrok-url/api/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = `Date: ${data.date}, Room Area: ${data.room_area}, Temperature: ${data.temperature}, Predicted KWh: ${data.predicted_kwh}`;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
